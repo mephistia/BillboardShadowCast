@@ -43,10 +43,6 @@
     <None Include="luzVertex.shader" />
     <None Include="arvoreFragment.shader" />
     <None Include="arvoreVertex.shader" />
-    <None Include="simpleDepthFragment.shader" />
-    <None Include="simpleDepthVertex.shader" />
-    <None Include="quadDepthFragment.shader" />
-    <None Include="quadDepthVertex.shader" />
     <None Include="arvoreGeometry.shader" />
   </ItemGroup>
 </Project>

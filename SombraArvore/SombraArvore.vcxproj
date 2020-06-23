@@ -158,10 +158,6 @@
     <None Include="chaoVertex.shader" />
     <None Include="luzFragment.shader" />
     <None Include="luzVertex.shader" />
-    <None Include="quadDepthFragment.shader" />
-    <None Include="quadDepthVertex.shader" />
-    <None Include="simpleDepthFragment.shader" />
-    <None Include="simpleDepthVertex.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

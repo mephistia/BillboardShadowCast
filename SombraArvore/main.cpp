@@ -11,6 +11,7 @@
 
 #include <iostream>
 
+// funções
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -58,8 +59,6 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
-
-    // mouse como input
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
    
@@ -151,11 +150,11 @@ int main()
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
-       // input
+ 
+        // input
         processInput(window);
 
-        // clear
+        // limpa buffers
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -169,15 +168,10 @@ int main()
         lightShader.use();
         renderLight(lightShader, lightVAO);
 
-
-
-
-
+        // troca buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-
     glDeleteVertexArrays(1, &VAO);
     glDeleteVertexArrays(1, &treeVAO);
     glDeleteVertexArrays(1, &lightVAO);
@@ -204,19 +198,14 @@ void processInput(GLFWwindow* window)
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         lightPos -= glm::vec3(0.0, 0.0, 1.0 * deltaTime);
-
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
         lightPos += glm::vec3(0.0, 0.0, 1.0 * deltaTime);
-
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
         lightPos -= glm::vec3(1.0 * deltaTime, 0.0, 0.0);
-
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
         lightPos += glm::vec3(1.0 * deltaTime, 0.0, 0.0);
-
     if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
         lightPos += glm::vec3(0.0, 1.5 * deltaTime, 0.0);
-
     if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
         lightPos -= glm::vec3(0.0, 1.5 * deltaTime, 0.0);
 }
@@ -292,16 +281,16 @@ void renderGround(const Shader& shader, GLuint array, GLuint texture, glm::vec3 
     shader.setVec3("viewPos", camera.Position);
 
 
-    // light properties
+    // luz
     shader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
     shader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
     shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
-    // material properties
+    // material
     shader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
     shader.setFloat("material.shininess", 64.0f);
 
-    // tree
+    // arvore
     shader.setVec3("tree.position", treeArray);
     float ratio = SCR_WIDTH / SCR_HEIGHT;
     glm::vec2 size(1, ratio * 1);
@@ -309,17 +298,15 @@ void renderGround(const Shader& shader, GLuint array, GLuint texture, glm::vec3 
 
 
 
-    // view/projection transformations
+    // matrizes
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = camera.GetViewMatrix();
     shader.setMat4("projection", projection);
     shader.setMat4("view", view);
-
-    // world transformation
     glm::mat4 model = glm::mat4(1.0f);
     shader.setMat4("model", model);
 
-    // render the cube
+    // renderiza
     glBindVertexArray(array);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -331,13 +318,15 @@ void renderLight(const Shader& shader, GLuint array) {
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 model = glm::mat4(1.0f);
 
+    // dados
     shader.setMat4("projection", projection);
     shader.setMat4("view", view);
     model = glm::mat4(1.0f);
     model = glm::translate(model, lightPos);
-    model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+    model = glm::scale(model, glm::vec3(0.2f)); // menor
     shader.setMat4("model", model);
 
+    // render
     glBindVertexArray(array);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
