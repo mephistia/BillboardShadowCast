@@ -9,7 +9,6 @@ struct Material {
 
 struct Light {
     vec3 position; // pos da luz
-
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -67,7 +66,7 @@ bool RayTriangleMT(
         return false;
     }
 
-    float t = f * dot(v0v2, q_);
+    //float t = f * dot(v0v2, q_);
 
     // retorna baricentro
     UV = vec2(u,v);
@@ -104,10 +103,10 @@ void main()
 
     vec3 result = ambient + diffuse + specular;
 
-    // cor da sombra depende da arvore
+    // cor da sombra depende da luz
     float shadow = 0.8 * diff;
 
-    // definir os vértices do billboard                                                                 // texCoords:
+    // vértices do billboard                                                                            // texCoords:
     treeTopRight = vec3(tree.position.x + treeDir.x, tree.position.y + 3 * treeDir.y, tree.position.z); vec2 TR = vec2(1, 0); 
     treeTopLeft = vec3(tree.position.x - treeDir.x, tree.position.y + 3 * treeDir.y, tree.position.z);  vec2 TL = vec2(0, 0);  
     treeBottomRight = vec3(tree.position.x + treeDir.x, tree.position.y - treeDir.y, tree.position.z);  vec2 BR = vec2(1, 1);  
@@ -116,7 +115,7 @@ void main()
 
     if (RayTriangleMT(light.position, lightDir, treeTopRight, treeTopLeft, treeBottomRight)) {
             
-        // usa o baricentro nas coordenadas de textura p/ definir coordenada do fragmento
+        // usa o baricentro nas coordenadas de textura p/ definir coordenada final
         vec2 P = (1 - UV.x - UV.y) * TR + UV.x * TL + UV.y * BR;
 
         FragColor = vec4(result, 1.0) * (1 - texture(tree.tex, P).a * shadow);
